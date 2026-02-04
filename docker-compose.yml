@@ -3,10 +3,26 @@ version: '3.8'
 services:
   app:
     build: .
-    # Mapping port: Port 8080 di laptop Anda -> Port 80 di Container
     ports:
       - "8080:80"
-    # Mapping volume: Agar kalau codingan diubah, di browser langsung berubah
     volumes:
       - ./src:/var/www/html
-    container_name: ci4-container
+    container_name: ci4-app
+    depends_on:
+      - db
+
+  db:
+    image: mysql:8.0
+    container_name: ci4-db
+    environment:
+      MYSQL_DATABASE: ci4_db
+      MYSQL_USER: user
+      MYSQL_PASSWORD: password
+      MYSQL_ROOT_PASSWORD: rootpassword
+    ports:
+      - "3306:3306"
+    volumes:
+      - db_data:/var/lib/mysql
+
+volumes:
+  db_data:

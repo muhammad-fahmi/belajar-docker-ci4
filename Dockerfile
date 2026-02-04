@@ -1,21 +1,23 @@
-# 1. Gunakan 'image' dasar PHP dengan Apache
-FROM php:8.1-apache
+FROM php:8.5-apache
 
-# 2. Install dependensi sistem yang dibutuhkan CodeIgniter 4
+# 1. Install dependensi sistem + git (penting untuk composer)
 RUN apt-get update && apt-get install -y \
     libicu-dev \
     unzip \
     zip \
-    && docker-php-ext-install intl pdo pdo_mysql
+    git \
+    && docker-php-ext-install intl pdo pdo_mysql mysqli pcntl
 
-# 3. Aktifkan mod_rewrite (Penting untuk URL CodeIgniter)
+# 2. Install Composer (Alat untuk download CodeIgniter)
+COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
+
+# 3. Ubah Document Root Apache ke /public (Standar CI4)
+# Ini agar saat buka localhost:8080, langsung masuk ke aplikasi, bukan daftar folder
+ENV APACHE_DOCUMENT_ROOT /var/www/html/public
+RUN sed -ri -e 's!/var/www/html!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/sites-available/*.conf
+RUN sed -ri -e 's!/var/www/!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/apache2.conf /etc/apache2/conf-available/*.conf
+
+# 4. Aktifkan mod_rewrite
 RUN a2enmod rewrite
 
-# 4. Atur folder kerja di dalam container
 WORKDIR /var/www/html
-
-# 5. Salin kodingan dari folder 'src' komputer kita ke dalam container
-COPY src/ /var/www/html/
-
-# 6. Berikan hak akses agar Apache bisa baca tulis
-RUN chown -R www-data:www-data /var/www/html
