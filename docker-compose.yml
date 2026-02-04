@@ -1,0 +1,12 @@
+version: '3.8'
+
+services:
+  app:
+    build: .
+    # Mapping port: Port 8080 di laptop Anda -> Port 80 di Container
+    ports:
+      - "8080:80"
+    # Mapping volume: Agar kalau codingan diubah, di browser langsung berubah
+    volumes:
+      - ./src:/var/www/html
+    container_name: ci4-container
