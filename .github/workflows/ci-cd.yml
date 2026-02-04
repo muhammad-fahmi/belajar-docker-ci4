@@ -1,0 +1,23 @@
+name: CI/CD Pipeline Sederhana
+
+# Kapan aksi ini dijalankan? Saat ada push ke branch main
+on:
+  push:
+    branches: [ "main" ]
+
+jobs:
+  build-test:
+    runs-on: ubuntu-latest
+
+    steps:
+    # 1. Ambil kodingan terbaru dari repo
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    # 2. Coba bangun (build) Docker image-nya
+    - name: Build Docker Image
+      run: docker build -t my-ci4-app .
+
+    # 3. Beri notifikasi (di log) kalau sukses
+    - name: Test Build Success
+      run: echo "Docker image berhasil dibuat! Kode aman."
