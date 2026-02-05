@@ -50,7 +50,11 @@ jobs:
             git pull origin main
 
             # Run database migrations
-            php spark migrate
+            php spark cache:clear
+            php spark optimize
+            php spark migrate --force
+
+
 
             # Restart service (contoh untuk systemd)
             sudo systemctl restart httpd.service
