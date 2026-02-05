@@ -49,18 +49,8 @@ jobs:
             # Pull latest changes
             git pull origin main
 
-            # Install dependencies (sesuaikan dengan tech stack)
-            # Untuk Node.js:
-            # npm install --production
-
-            # Untuk Python:
-            # pip install -r requirements.txt
+            # Run database migrations
+            php spark migrate
 
             # Restart service (contoh untuk systemd)
             sudo systemctl restart httpd.service
-
-            # Atau untuk PM2 (Node.js):
-            # pm2 reload myapp
-
-            # Atau untuk Docker:
-            # docker-compose up -d --build
